@@ -1,1 +1,2 @@
-# sample_issue_repo
+# Project Rules
+

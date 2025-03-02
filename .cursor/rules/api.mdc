@@ -1,0 +1,41 @@
+---
+description: rules for API development
+globs: src/app/api/**/*.ts
+alwaysApply: false
+---
+ # api
+
+## API Structure
+- API routes are located in src/app/api/
+- Each API endpoint should be in its own directory with a route.ts file
+- Follow the App Router conventions for API route handlers
+
+## Request Handling
+- Use proper HTTP methods (GET, POST, PUT, DELETE)
+- Validate request data with Zod or similar validation library
+- Return appropriate HTTP status codes
+- Structure response data consistently
+
+## Authentication & Authorization
+- Verify authentication state in API routes
+- Check user permissions before allowing operations
+- Use middleware for common auth checks when appropriate
+
+## Error Handling
+- Use try/catch blocks for error handling
+- Return structured error responses
+- Log errors appropriately
+- Include meaningful error messages
+
+## Performance Considerations
+- Keep API handlers lightweight
+- Consider caching strategies for frequently accessed data
+- Use pagination for list endpoints
+- Optimize database queries
+
+## Security Best Practices
+- Validate and sanitize all input data
+- Protect against common web vulnerabilities (CSRF, XSS, etc.)
+- Use HTTPS for all API communication
+- Implement proper rate limiting
+- Never expose sensitive information in responses

@@ -1,0 +1,35 @@
+---
+description: rules for Prisma ORM usage
+globs: prisma/**/*, src/lib/prisma.ts
+alwaysApply: false
+---
+ # prisma
+
+## Prisma ORM Usage
+- Prisma is used as the primary ORM for database operations
+- Prisma schema is defined in prisma/schema.prisma
+- Database migrations are handled through Prisma
+
+## Database Client
+- Prisma client is initialized in src/lib/prisma.ts
+- Always use the singleton pattern for the Prisma client to avoid connection issues
+- For server-side operations, import the client from src/lib/prisma.ts
+- Transactions should be used for operations that require atomicity
+
+## Data Modeling
+- Follow the database schema as defined in the ER diagram
+- Use Prisma's relations for defining relationships between models
+- Ensure proper indexes are created for frequently queried fields
+
+## Query Patterns
+- Use Prisma's fluent API for complex queries
+- Prefer select() to limit returned fields for performance
+- Use include() for related data when needed
+- Implement pagination for list queries using skip/take
+- Handle errors properly with try/catch blocks
+
+## Performance Considerations
+- Avoid N+1 query problems by using proper includes
+- Consider using Prisma's findMany with where conditions for bulk operations
+- Use transactions for operations that modify multiple tables
+- Consider query complexity and database load for expensive operations

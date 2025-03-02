@@ -1,0 +1,46 @@
+---
+description: rules for frontend
+globs: src/app/**/*.tsx, src/components/**/*.tsx", "src/lib/**/*.ts
+alwaysApply: false
+---
+# frontend
+
+This project is a Next.js application using App Router for カオスマップ自動生成サービス「ChaosMapGenAI」.
+
+## Front-end Technology Stack
+- Next.js 15 with App Router
+- React 19
+- TypeScript
+- Tailwind CSS for styling
+- Supabase for authentication, database, and storage
+- Prisma as ORM
+
+## Key Architecture Points
+- Server Components are used for initial data fetching
+- API Routes in src/app/api/ for dynamic operations 
+- Type definitions are centralized in src/types/index.ts
+- Supabase client connections are handled through src/lib/supabase/
+  - createBrowserClient.ts for client-side
+  - createServerClient.ts for server-side
+  - createServiceClient.ts for service operations
+
+## Authentication Notes
+- Use supabase.auth.getUser() to get auth user (not supabase.auth.getSession())
+- Session retrieval with supabase.auth.getSession() is acceptable
+- Middleware uses updateSession from @/utils/supabase/middleware for cookie refreshes
+
+## UI Components
+- UI components are in src/components/
+- shadcn UI components are used for consistent design
+
+## Coding Patterns
+- Server Components for initial render
+- Client Components for interactive elements
+- API Routes for data mutations
+- Type-safety throughout the application
+- Prefer async/await pattern for asynchronous operations
+- Use proper error handling with try/catch
+
+## Special Considerations
+- When handling params from Next.js, they should be awaited: const { projectId } = await params
+- Params should be typed as Promise: { params: Promise<{ id: string }> }
