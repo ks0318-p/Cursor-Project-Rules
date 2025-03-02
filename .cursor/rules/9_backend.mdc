@@ -1,0 +1,167 @@
+---
+description: バックエンド開発規約
+globs: apps/server/**/*.{ts,js}
+alwaysApply: true
+---
+# バックエンド開発規約
+
+## API設計
+
+### REST API誌民化
+
+- URLは資源を表す名詞にする（動詞ではなく）
+- HTTPメソッドで操作を表現する
+  - `GET`: 読み取り
+  - `POST`: 新規作成
+  - `PUT`: 更新（全体）
+  - `PATCH`: 部分更新
+  - `DELETE`: 削除
+- 複数形のリソース名を使用する（例: `/users`、`/categories`）
+- ネストされたリソースは階層的にURLを設計する（例: `/users/{id}/projects`）
+
+### APIバージョニング
+
+- APIの大きな変更がある場合はバージョンを更新する
+- URLパスにバージョンを含める（例: `/api/v1/users`）
+
+### APIレスポンス形式
+
+成功時（例: ユーザー取得）
+
+```json
+{
+  "success": true,
+  "data": {
+    "id": 123,
+    "name": "John Doe",
+    "email": "john@example.com"
+  },
+  "meta": {
+    "requestId": "abc-123-xyz"
+  }
+}
+```
+
+エラー時
+
+```json
+{
+  "success": false,
+  "error": {
+    "code": "USER_NOT_FOUND",
+    "message": "指定されたユーザーが見つかりません",
+    "details": {
+      "userId": 123
+    }
+  },
+  "meta": {
+    "requestId": "abc-123-xyz"
+  }
+}
+```
+
+### OpenAPIドキュメント
+
+- 全てのAPIはOpenAPI（Swagger）ドキュメントで文書化する
+- NestJSのSwaggerモジュールを使用して自動生成する
+
+## データベース
+
+### PostgreSQL設計
+
+- テーブル名は複数形の名詞を使用する（例: `users`、`categories`）
+- カラム名はスネークケースを使用する（例: `user_id`、`created_at`）
+- 全てのテーブルにタイムスタンプカラム（`created_at`、`updated_at`）を含める
+- 外部キー制約を適切に設定する
+
+### Prisma ORM
+
+- データベース操作はPrismaを使用する
+- スキーマ定義は `schema.prisma` ファイルで管理する
+- マイグレーションを適切に管理し、変更履歴を追跡する
+
+```prisma
+// schema.prisma
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  name      String?
+  projects  Project[]
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("users")
+}
+
+model Project {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String?
+  userId      Int      @map("user_id")
+  user        User     @relation(fields: [userId], references: [id])
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@map("projects")
+}
+```
+
+## エラーハンドリング
+
+### エラークラス
+
+- アプリケーション固有の例外クラスを作成する
+- 具体的なエラーコードとメッセージを定義する
+
+```typescript
+// exceptions/base.exception.ts
+export class BaseException extends Error {
+  constructor(
+    public readonly code: string,
+    public readonly message: string,
+    public readonly details?: Record<string, any>
+  ) {
+    super(message);
+  }
+}
+
+// exceptions/user.exception.ts
+export class UserNotFoundException extends BaseException {
+  constructor(userId: number) {
+    super(
+      'USER_NOT_FOUND',
+      '指定されたユーザーが見つかりません',
+      { userId }
+    );
+  }
+}
+```
+
+### グローバル例外フィルター
+
+- NestJSのグローバル例外フィルターを使用して、一元的にエラーレスポンスを定義する
+
+## 認証と認可
+
+### JWT認証
+
+- ユーザー認証はJWTを使用する
+- トークンはアクセストークンとリフレッシュトークンの2種類を使用する
+- アクセストークンの期限は15分、リフレッシュトークンの期限は7日間とする
+
+### ロールベースのアクセス制御
+
+- ユーザーに複数のロールを割り当てられるようにする
+- ロールに基づいてアクセス制御を行う
+
+## パフォーマンスとキャッシュ
+
+### Redisキャッシュ
+
+- 頻繁にアクセスされるデータはRedisでキャッシュする
+- キャッシュの有効期限を適切に設定する
+
+### タスクキュー
+
+- 重い処理は非同期タスクキューを使用して処理する
+- BullやBullMQを使用したキューを実装する 

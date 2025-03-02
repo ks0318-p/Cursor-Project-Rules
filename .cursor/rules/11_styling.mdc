@@ -1,0 +1,408 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# styling
+
+## デザインシステム
+
+### カラーパレット
+```css
+:root {
+  /* プライマリカラー - ブランドカラー（青系） */
+  --color-primary-50: #eef2ff;
+  --color-primary-100: #e0e7ff;
+  --color-primary-200: #c7d2fe;
+  --color-primary-300: #a5b4fc;
+  --color-primary-400: #818cf8;
+  --color-primary-500: #6366f1;
+  --color-primary-600: #4f46e5;
+  --color-primary-700: #4338ca;
+  --color-primary-800: #3730a3;
+  --color-primary-900: #312e81;
+  --color-primary-950: #1e1b4b;
+  
+  /* グレースケール */
+  --color-gray-50: #f9fafb;
+  --color-gray-100: #f3f4f6;
+  --color-gray-200: #e5e7eb;
+  --color-gray-300: #d1d5db;
+  --color-gray-400: #9ca3af;
+  --color-gray-500: #6b7280;
+  --color-gray-600: #4b5563;
+  --color-gray-700: #374151;
+  --color-gray-800: #1f2937;
+  --color-gray-900: #111827;
+  --color-gray-950: #030712;
+  
+  /* セマンティックカラー */
+  --color-success: #10b981;
+  --color-warning: #f59e0b;
+  --color-error: #ef4444;
+  --color-info: #3b82f6;
+  
+  /* 背景色 */
+  --color-background: #ffffff;
+  --color-background-alt: #f9fafb;
+  
+  /* テキストカラー */
+  --color-text-primary: #111827;
+  --color-text-secondary: #4b5563;
+  --color-text-tertiary: #9ca3af;
+  --color-text-inverted: #ffffff;
+}
+
+/* ダークモード */
+.dark {
+  --color-background: #111827;
+  --color-background-alt: #1f2937;
+  --color-text-primary: #f9fafb;
+  --color-text-secondary: #e5e7eb;
+  --color-text-tertiary: #9ca3af;
+  --color-text-inverted: #111827;
+}
+```
+
+### タイポグラフィ
+```css
+:root {
+  /* フォントファミリー */
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', Consolas, monospace;
+  
+  /* フォントサイズ */
+  --font-size-xs: 0.75rem;   /* 12px */
+  --font-size-sm: 0.875rem;  /* 14px */
+  --font-size-base: 1rem;    /* 16px */
+  --font-size-md: 1.125rem;  /* 18px */
+  --font-size-lg: 1.25rem;   /* 20px */
+  --font-size-xl: 1.5rem;    /* 24px */
+  --font-size-2xl: 1.875rem; /* 30px */
+  --font-size-3xl: 2.25rem;  /* 36px */
+  --font-size-4xl: 3rem;     /* 48px */
+  
+  /* 行の高さ */
+  --line-height-tight: 1.25;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.75;
+  
+  /* フォントウェイト */
+  --font-weight-light: 300;
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+}
+```
+
+### スペーシング
+```css
+:root {
+  /* スペーシング（マージン、パディング） */
+  --spacing-0: 0;
+  --spacing-px: 1px;
+  --spacing-0.5: 0.125rem; /* 2px */
+  --spacing-1: 0.25rem;    /* 4px */
+  --spacing-1.5: 0.375rem; /* 6px */
+  --spacing-2: 0.5rem;     /* 8px */
+  --spacing-2.5: 0.625rem; /* 10px */
+  --spacing-3: 0.75rem;    /* 12px */
+  --spacing-3.5: 0.875rem; /* 14px */
+  --spacing-4: 1rem;       /* 16px */
+  --spacing-5: 1.25rem;    /* 20px */
+  --spacing-6: 1.5rem;     /* 24px */
+  --spacing-8: 2rem;       /* 32px */
+  --spacing-10: 2.5rem;    /* 40px */
+  --spacing-12: 3rem;      /* 48px */
+  --spacing-16: 4rem;      /* 64px */
+  --spacing-20: 5rem;      /* 80px */
+  --spacing-24: 6rem;      /* 96px */
+  --spacing-32: 8rem;      /* 128px */
+}
+```
+
+### ブレークポイント
+```css
+/* Tailwind CSSのブレークポイント */
+:root {
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+  --breakpoint-2xl: 1536px;
+}
+```
+
+## Tailwind CSS設定
+
+### tailwind.config.js
+```js
+/** @type {import('tailwindcss').Config} */
+module.exports = {
+  darkMode: ['class'],
+  content: [
+    './src/pages/**/*.{js,ts,jsx,tsx,mdx}',
+    './src/components/**/*.{js,ts,jsx,tsx,mdx}',
+    './src/app/**/*.{js,ts,jsx,tsx,mdx}',
+  ],
+  theme: {
+    container: {
+      center: true,
+      padding: '2rem',
+      screens: {
+        '2xl': '1400px',
+      },
+    },
+    extend: {
+      colors: {
+        border: 'hsl(var(--border))',
+        input: 'hsl(var(--input))',
+        ring: 'hsl(var(--ring))',
+        background: 'hsl(var(--background))',
+        foreground: 'hsl(var(--foreground))',
+        primary: {
+          DEFAULT: 'hsl(var(--primary))',
+          foreground: 'hsl(var(--primary-foreground))',
+        },
+        secondary: {
+          DEFAULT: 'hsl(var(--secondary))',
+          foreground: 'hsl(var(--secondary-foreground))',
+        },
+        destructive: {
+          DEFAULT: 'hsl(var(--destructive))',
+          foreground: 'hsl(var(--destructive-foreground))',
+        },
+        muted: {
+          DEFAULT: 'hsl(var(--muted))',
+          foreground: 'hsl(var(--muted-foreground))',
+        },
+        accent: {
+          DEFAULT: 'hsl(var(--accent))',
+          foreground: 'hsl(var(--accent-foreground))',
+        },
+        popover: {
+          DEFAULT: 'hsl(var(--popover))',
+          foreground: 'hsl(var(--popover-foreground))',
+        },
+        card: {
+          DEFAULT: 'hsl(var(--card))',
+          foreground: 'hsl(var(--card-foreground))',
+        },
+      },
+      borderRadius: {
+        lg: 'var(--radius)',
+        md: 'calc(var(--radius) - 2px)',
+        sm: 'calc(var(--radius) - 4px)',
+      },
+      fontFamily: {
+        sans: ['var(--font-sans)'],
+        mono: ['var(--font-mono)'],
+      },
+      keyframes: {
+        'accordion-down': {
+          from: { height: 0 },
+          to: { height: 'var(--radix-accordion-content-height)' },
+        },
+        'accordion-up': {
+          from: { height: 'var(--radix-accordion-content-height)' },
+          to: { height: 0 },
+        },
+      },
+      animation: {
+        'accordion-down': 'accordion-down 0.2s ease-out',
+        'accordion-up': 'accordion-up 0.2s ease-out',
+      },
+    },
+  },
+  plugins: [
+    require('tailwindcss-animate'),
+    require('@tailwindcss/typography'),
+    require('@tailwindcss/forms'),
+  ],
+};
+```
+
+## コンポーネントスタイリング手法
+
+### Utility-Firstアプローチ（Tailwind CSS）
+```tsx
+// 推奨: Tailwindのユーティリティクラスを直接使用
+<div className="p-4 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow">
+  <h2 className="text-xl font-bold text-gray-800 mb-2">カード見出し</h2>
+  <p className="text-gray-600">カードの本文テキスト</p>
+  <button className="mt-4 px-4 py-2 bg-primary-600 text-white rounded hover:bg-primary-700 transition-colors">
+    詳細を見る
+  </button>
+</div>
+```
+
+### スタイリングのカプセル化（CSS Modules）
+```tsx
+// コンポーネント固有のスタイルはCSS Modulesを使用
+// Card.module.css
+.card {
+  @apply p-4 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow;
+}
+
+.title {
+  @apply text-xl font-bold text-gray-800 mb-2;
+}
+
+.content {
+  @apply text-gray-600;
+}
+
+.button {
+  @apply mt-4 px-4 py-2 bg-primary-600 text-white rounded hover:bg-primary-700 transition-colors;
+}
+
+// Card.tsx
+import styles from './Card.module.css';
+
+export const Card = ({ title, content }) => {
+  return (
+    <div className={styles.card}>
+      <h2 className={styles.title}>{title}</h2>
+      <p className={styles.content}>{content}</p>
+      <button className={styles.button}>詳細を見る</button>
+    </div>
+  );
+};
+```
+
+### 条件付きスタイリング
+```tsx
+// clsxを使用した条件付きクラス適用
+import { clsx } from 'clsx';
+
+type ButtonProps = {
+  variant?: 'primary' | 'secondary' | 'danger';
+  size?: 'sm' | 'md' | 'lg';
+  isFullWidth?: boolean;
+  children: React.ReactNode;
+  className?: string;
+};
+
+export const Button = ({
+  variant = 'primary',
+  size = 'md',
+  isFullWidth = false,
+  children,
+  className,
+  ...props
+}: ButtonProps) => {
+  return (
+    <button
+      className={clsx(
+        // 基本スタイル
+        'font-medium rounded transition-colors',
+        
+        // バリアントに基づくスタイル
+        variant === 'primary' && 'bg-primary-600 text-white hover:bg-primary-700',
+        variant === 'secondary' && 'bg-gray-200 text-gray-800 hover:bg-gray-300',
+        variant === 'danger' && 'bg-red-600 text-white hover:bg-red-700',
+        
+        // サイズに基づくスタイル
+        size === 'sm' && 'text-sm py-1 px-3',
+        size === 'md' && 'py-2 px-4',
+        size === 'lg' && 'text-lg py-2 px-6',
+        
+        // 幅の設定
+        isFullWidth && 'w-full',
+        
+        // カスタムクラス
+        className
+      )}
+      {...props}
+    >
+      {children}
+    </button>
+  );
+};
+```
+
+## グローバルスタイル
+
+### globals.css
+```css
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+
+    --primary: 243 75% 59%;
+    --primary-foreground: 210 40% 98%;
+
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --ring: 215 20.2% 65.1%;
+
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+
+    --primary: 243 75% 59%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 85.7% 97.3%;
+
+    --ring: 217.2 32.6% 17.5%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+}
+``` 

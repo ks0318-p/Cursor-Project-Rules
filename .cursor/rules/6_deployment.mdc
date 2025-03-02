@@ -1,0 +1,105 @@
+---
+description: デプロイメント規約
+globs: **/*.{yaml,yml,json,tf,dockerfile}
+alwaysApply: true
+---
+# デプロイメント規約
+
+## 環境
+
+### 開発環境
+- ローカル開発環境: Docker Compose
+- バージョン管理: Git + GitHub
+
+### ステージング環境
+- AWS上に構築
+- データは本番環境と分離
+
+### 本番環境
+- AWS上に構築
+- 本番環境は冗長性とスケーラビリティを確保
+
+## CI/CDパイプライン
+
+### GitHub Actionsワークフロー
+
+```yaml
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Install dependencies
+        run: npm ci
+      - name: Run linting
+        run: npm run lint
+      - name: Run tests
+        run: npm test
+
+  build:
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push'
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Install dependencies
+        run: npm ci
+      - name: Build
+        run: npm run build
+
+  deploy_staging:
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/develop'
+    steps:
+      - name: Deploy to Staging
+        run: echo "Deploying to staging..."
+
+  deploy_production:
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - name: Deploy to Production
+        run: echo "Deploying to production..."
+```
+
+## デプロイプロセス
+
+### ブランチモデル
+
+- 開発は `develop` ブランチで行う
+- 機能開発は `feature/*` ブランチで行い、完了後 `develop` へマージ
+- リリース準備は `release/*` ブランチで行い、準備完了後 `main` へマージ
+
+### 状態遷移
+
+1. 機能開発や修正は `feature/*` ブランチで行う
+2. プルリクエストによるコードレビューを実施
+3. レビュー完了後 `develop` ブランチにマージ
+4. `develop` ブランチは自動的にステージング環境にデプロイされる
+5. リリース準備が整ったら `release/*` ブランチを作成
+6. 最終テスト完了後、`main` ブランチにマージ
+7. `main` ブランチは自動的に本番環境にデプロイされる
+
+## モニタリングとログ収集
+
+- AWS CloudWatchでサーバーログを収集
+- Sentryでフロントエンドエラーをキャプチャ
+- Datadogでパフォーマンスメトリクスを収集 

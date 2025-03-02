@@ -1,0 +1,65 @@
+---
+description: コーディング規約
+globs: **/*.{ts,tsx,js,jsx}
+alwaysApply: true
+---
+# コーディング規約
+
+## 命名規則
+
+### 全般
+- 英語でわかりやすい名前を使用する
+- 略語や非自明な省略は避ける
+- 機能や目的を反映した名前を選ぶ
+
+### 変数名
+- 基本的にキャメルケース（camelCase）を使用する
+- ブール型変数には `is`、`has`、`should` などの接頭辞を使用する
+- 定数は大文字のスネークケース（SNAKE_CASE）で記述する
+
+### 関数名
+- 動詞を含むキャメルケースを使用する（例: `getUserData`、`calculateTotal`）
+- Reactのイベントハンドラーには `handle` を接頭辞として使用する（例: `handleSubmit`）
+
+### コンポーネント名
+- パスカルケース（PascalCase）を使用する
+- 名詞で始まるワードを使用する（例: `UserProfile`、`CategoryList`）
+
+### ファイル名
+- コンポーネントファイルはパスカルケースで命名する（例: `UserProfile.tsx`）
+- 非コンポーネントファイルはキャメルケースで命名する（例: `apiUtils.ts`）
+
+## コードフォーマット
+
+### スペースとインデント
+- インデントには2スペースを使用する
+- 行末の空白を残さない
+- ファイルの最後には空行を追加する
+
+### セミコロン
+- 文の最後には必ずセミコロンを付ける
+
+### 混合クォート
+- 文字列はシングルクォートではなくダブルクォートを使用する
+
+## コード品質
+
+### 法則
+- DRY（Don't Repeat Yourself）の原則を適用する
+- KISS（Keep It Simple, Stupid）を心がける
+- YAGNI（You Aren't Gonna Need It）を心がける
+
+### コメント
+- 複雑なロジックには必ずコメントを追加する
+- JSDocスタイルのコメントを推奨する
+
+```typescript
+/**
+ * ユーザーデータを取得する関数
+ * @param {string} userId ユーザーID
+ * @returns {Promise<User>} ユーザー情報
+ */
+async function getUserData(userId: string): Promise<User> {
+  // 実装
+}
+``` 

@@ -1,0 +1,236 @@
+---
+description: フロントエンド開発規約
+globs: apps/client/**/*.{ts,tsx,js,jsx}
+alwaysApply: true
+---
+# フロントエンド開発規約
+
+## React / Next.js
+
+### コンポーネントの分類
+
+#### 機能コンポーネント
+
+- アプリケーションの具体的な機能を実装するコンポーネント
+- 例: `UserProfile`, `ProjectList`, `CategorySelector`
+
+#### 共通コンポーネント
+
+- 複数の機能で再利用される汎用性の高いコンポーネント
+- 例: `Button`, `Card`, `Modal`, `Input`
+
+#### レイアウトコンポーネント
+
+- ページやセクションのレイアウトを定義するコンポーネント
+- 例: `AppLayout`, `DashboardLayout`, `AuthLayout`
+
+### コンポーネント設計原則
+
+- 単一責任の原则: 各コンポーネントは一つの責任を持つように設計する
+- コンポーネントは決して大きくしすぎないこと (300行以下を目安にする)
+- プロップドリリングは避けること
+
+### 関数コンポーネントとフック
+
+- クラスコンポーネントではなく関数コンポーネントを使用する
+- 共通ロジックはカスタムフックとして切り出す
+
+```typescript
+// 適切な関数コンポーネントの例
+const UserProfile: React.FC<UserProfileProps> = ({ userId }) => {
+  const { user, isLoading, error } = useUser(userId);
+
+  if (isLoading) return <Spinner />;
+  if (error) return <ErrorMessage message={error.message} />;
+
+  return (
+    <div className="p-4 bg-white rounded shadow">
+      <h2 className="text-xl font-bold">{user.name}</h2>
+      <p className="text-gray-600">{user.email}</p>
+      {/* 他のユーザー情報 */}
+    </div>
+  );
+};
+```
+
+```typescript
+// カスタムフックの例
+export const useUser = (userId: string) => {
+  const [user, setUser] = useState<User | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [error, setError] = useState<Error | null>(null);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        setIsLoading(true);
+        const data = await userService.getUserById(userId);
+        setUser(data);
+      } catch (err) {
+        setError(err instanceof Error ? err : new Error('Unknown error'));
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchUser();
+  }, [userId]);
+
+  return { user, isLoading, error };
+};
+```
+
+## 状態管理
+
+### React Context API
+
+- 小規模な状態はReact Context APIを使用する
+- 特定機能に関連する状態に適切
+
+### Zustand
+
+- 複雑なグローバル状態にはZustandを使用する
+- アプリ全体で共有される状態や、アクションを含む複雑な状態に適切
+
+```typescript
+// Zustandストアの例
+import { create } from 'zustand';
+
+interface AuthState {
+  user: User | null;
+  isAuthenticated: boolean;
+  isLoading: boolean;
+  error: string | null;
+  login: (email: string, password: string) => Promise<void>;
+  logout: () => Promise<void>;
+}
+
+export const useAuthStore = create<AuthState>((set) => ({
+  user: null,
+  isAuthenticated: false,
+  isLoading: false,
+  error: null,
+  login: async (email, password) => {
+    try {
+      set({ isLoading: true, error: null });
+      const user = await authService.login(email, password);
+      set({ user, isAuthenticated: true, isLoading: false });
+    } catch (error) {
+      set({ 
+        error: error instanceof Error ? error.message : 'ログインに失敗しました',
+        isLoading: false 
+      });
+    }
+  },
+  logout: async () => {
+    try {
+      set({ isLoading: true });
+      await authService.logout();
+      set({ user: null, isAuthenticated: false, isLoading: false });
+    } catch (error) {
+      set({ 
+        error: error instanceof Error ? error.message : 'ログアウトに失敗しました',
+        isLoading: false 
+      });
+    }
+  }
+}));
+```
+
+## データ取得
+
+### TanStack Query (React Query)
+
+- サーバーサイドデータを取得、キャッシュ、更新するためにTanStack Queryを使用する
+- キャッシュ戦略、リトライロジックを一貫して実装する
+
+```typescript
+import { useQuery, useMutation, QueryClient, QueryClientProvider } from '@tanstack/react-query';
+
+// クエリフックの例
+export const useProjects = () => {
+  return useQuery({
+    queryKey: ['projects'],
+    queryFn: () => projectService.getProjects(),
+    staleTime: 5 * 60 * 1000, // 5分
+    retry: 3
+  });
+};
+
+// ミューテーションフックの例
+export const useCreateProject = () => {
+  const queryClient = useQueryClient();
+  
+  return useMutation({
+    mutationFn: (newProject: NewProject) => projectService.createProject(newProject),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['projects'] });
+    }
+  });
+};
+```
+
+## フォーム管理
+
+### React Hook Form + Zod
+
+- フォームは React Hook Form を使用して管理する
+- Zod によるバリデーションを組み合わせる
+
+```typescript
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+
+// スキーマ定義
+const loginSchema = z.object({
+  email: z.string().email('有効なメールアドレスを入力してください'),
+  password: z.string().min(8, 'パスワードは8文字以上で入力してください')
+});
+
+type LoginFormData = z.infer<typeof loginSchema>;
+
+const LoginForm: React.FC = () => {
+  const { register, handleSubmit, formState: { errors } } = useForm<LoginFormData>({
+    resolver: zodResolver(loginSchema)
+  });
+
+  const onSubmit = (data: LoginFormData) => {
+    console.log(data);
+    // ログイン処理
+  };
+
+  return (
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+      <div>
+        <label htmlFor="email" className="block text-sm font-medium text-gray-700">メールアドレス</label>
+        <input
+          id="email"
+          type="email"
+          {...register('email')}
+          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
+        />
+        {errors.email && <p className="mt-1 text-sm text-red-600">{errors.email.message}</p>}
+      </div>
+
+      <div>
+        <label htmlFor="password" className="block text-sm font-medium text-gray-700">パスワード</label>
+        <input
+          id="password"
+          type="password"
+          {...register('password')}
+          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
+        />
+        {errors.password && <p className="mt-1 text-sm text-red-600">{errors.password.message}</p>}
+      </div>
+
+      <button
+        type="submit"
+        className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700"
+      >
+        ログイン
+      </button>
+    </form>
+  );
+};
+``` 
