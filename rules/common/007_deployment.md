@@ -1,8 +1,8 @@
-## 概要
+## デプロイ概要
 
 本プロジェクトは、AWS上にDockerコンテナとして展開されるマイクロサービスアーキテクチャを採用しています。フロントエンドとバックエンドは別々のコンテナとしてビルド・デプロイされ、AWS CodePipelineを使用したCI/CDパイプラインによって自動化されています。
 
-## デプロイフロー
+### デプロイフロー
 
 このプロジェクトのデプロイフローは以下のように構成されています：
 
@@ -26,11 +26,11 @@ flowchart TB
     FrontendECR --> FrontendDeploy[フロントエンドをECSにデプロイ]
 ```
 
-## 重要なファイル
+### 重要なファイル
 
 デプロイプロセスを理解・修正する際には、以下のファイルを特に注視する必要があります：
 
-### Dockerfiles
+#### Dockerfiles
 
 1. **Dockerfile.frontend**
    - フロントエンド（Next.js）のビルドとデプロイに使用
@@ -44,7 +44,7 @@ flowchart TB
    - 環境変数（ENVIRONMENT）の設定
    - メモリ制限設定（--max-old-space-size=6144）付きでNode.jsアプリケーションを起動
 
-### BuildSpec設定
+#### BuildSpec設定
 
 1. **buildspec_frontend.yml**
    - フロントエンドのCI/CDパイプライン設定
@@ -60,22 +60,22 @@ flowchart TB
    - AWS ECRへのログインとイメージのプッシュ
    - ECSデプロイ用のimagedefinitions.jsonの生成
 
-## 環境変数
+### 環境変数
 
 デプロイプロセスでは、以下の重要な環境変数が使用されています：
 
-### 共通
+#### 共通
 - `ENVIRONMENT`: 環境識別子（dev, stg, prod等）
 - `IMAGE_TAG`: コンテナイメージのタグ
 - `IMAGE_REPO_URL`: ECRレポジトリURL
 - `AWS_REGION`: AWSリージョン
 - `AWS_ACCOUNT_ID`: AWSアカウントID
 
-### フロントエンド特有
+#### フロントエンド特有
 - `NEXT_PUBLIC_CLOUDFRONT_DOMAIN`: CloudFrontのドメイン
 - `NEXT_PUBLIC_ADOBE_CLIENT_ID`: Adobe APIのクライアントID
 
-## デプロイ後の処理
+### デプロイ後の処理
 
 バックエンドのデプロイプロセスでは、イメージのビルドとプッシュ後に以下の追加タスクが実行されます：
 
@@ -85,7 +85,7 @@ flowchart TB
 2. **シードデータ投入** (`yarn seed:prod`)
    - 本番環境用の初期データ設定
 
-## インフラストラクチャ
+### インフラストラクチャ
 
 デプロイ先のインフラストラクチャはTerraformで管理されています。関連するTerraform設定は以下のディレクトリにあります：
 
@@ -93,7 +93,7 @@ flowchart TB
 - `terraform/modules/ap-northeast-1/ecs/`: ECSの設定
 - `terraform/modules/ap-northeast-1/ecr/`: ECRの設定
 
-## デプロイに関する注意点
+### デプロイに関する注意点
 
 1. **マイグレーション順序**
    - バックエンドデプロイ時、コンテナデプロイ前にマイグレーションが実行されます
@@ -107,7 +107,7 @@ flowchart TB
    - 本番イメージサイズを最小化するためマルチステージビルドを使用しています
    - 依存関係インストールとビルドは最初のステージで行われ、成果物のみが本番イメージにコピーされます
 
-## AI支援時のデプロイ作業
+### AI支援時のデプロイ作業
 
 AIにデプロイ関連のタスクを依頼する際は、以下の点に注意してください：
 
