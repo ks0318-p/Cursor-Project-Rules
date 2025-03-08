@@ -1,7 +1,7 @@
 {
   "name": "cursor-project-rules",
   "version": "1.0.0",
-  "description": "このレポジトリの主目的は、zennの記事で語ったCursorのProjectRulesの運用イメージを伝えることです。",
+  "description": "",
   "main": "index.js",
   "type": "module",
   "scripts": {
