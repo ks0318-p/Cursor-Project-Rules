@@ -173,8 +173,7 @@
 
    ```bash
    # リポジトリのクローン
-   git clone https://github.com/QuanteeByExKey/quanteeAd.git
-   cd quanteeAd
+   git clone https://github.com/xxxxx/xxxxx.git
 
    # 依存関係のインストール
    yarn install
