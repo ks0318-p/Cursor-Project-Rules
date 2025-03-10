@@ -17,6 +17,20 @@ const mdcConfigurations = [
     header: "", // もしコメントとか入れたければ
     filePattern: "*.md",
     sortBy: "name"
+  },
+  {
+    output: ".cursor/rules/002_bestPractices_frontend.mdc",
+    sourceDir: "rules/frontend",
+    header: "", // もしコメントとか入れたければ
+    filePattern: "*.md",
+    sortBy: "name"
+  },
+  {
+    output: ".cursor/rules/003_bestPractices_backend.mdc",
+    sourceDir: "rules/backend",
+    header: "", // もしコメントとか入れたければ
+    filePattern: "*.md",
+    sortBy: "name"
   }
 ];
 

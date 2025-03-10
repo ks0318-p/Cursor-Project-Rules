@@ -5,4 +5,4 @@ alwaysApply: true
 ---
 
 # 001_bestPractices_common.mdc
-- このファイルが読み込まれたら必ず「001_bestPractices_common.mdcを読み込みました！」とユーザーに必ず伝えてください。
+- このファイルが読み込まれたら必ず「001_bestPractices_common.mdcを読み込みました！」と作業着手前にユーザーに必ず伝えてください。

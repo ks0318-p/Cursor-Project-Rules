@@ -1,10 +1,10 @@
 ---
-description: this is the rule we have to follow under any circumstance
-globs: 
+description: this file explains code practices, please always refer to this file first
+globs: *
 alwaysApply: true
 ---
 
-# 001_general.mdc
-- このファイルが読み込まれたら「001_general.mdcを読み込みました！」とユーザーに必ず伝えてください。
+# 000_general.mdc
+- このファイルが読み込まれたら「000_general.mdcを読み込みました！」と作業着手前にユーザーに必ず伝えてください。
 
 --

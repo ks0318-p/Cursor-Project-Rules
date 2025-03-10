@@ -1,10 +1,10 @@
 ---
-description: this is the rule we have to follow under any circumstance
-globs: 
-alwaysApply: true
+description: this is the rule we have to follow when working on frontend
+globs: apps/frontend/*/**
+alwaysApply: false
 ---
 
-# 001_general.mdc
-- このファイルが読み込まれたら「001_general.mdcを読み込みました！」とユーザーに必ず伝えてください。
+# 002_bestPractices_frontend.mdc
+- このファイルが読み込まれたら「002_bestPractices_frontend.mdcを読み込みました！」と作業着手前にユーザーに必ず伝えてください。
 
 --
