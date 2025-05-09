@@ -1,3 +1,6 @@
+## 注意
+2025年5月現在、著者はこのrulesを使っていないです。
+
 ## このレポジトリの目的
 
 このレポジトリの主目的は、zennの記事（https://zenn.dev/ks0318/articles/b8eb2c9396f9cb）で語られているCursorのProjectRulesの運用イメージを伝えることです。
